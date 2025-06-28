@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-function AuthLayout({ children }) {
+function AuthLayout({ children, forAdmin = false }) {
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
@@ -11,9 +11,13 @@ function AuthLayout({ children }) {
       toast.warning("Not authorized!");
       navigate("/login");
     }
-  }, [userInfo, navigate]);
+    if (forAdmin && !userInfo.isAdmin) {
+      toast.error("Admin access required!");
+      return navigate("/");
+    }
+  }, [userInfo, navigate, forAdmin]);
 
-  if (!userInfo) return null;
+  if (!userInfo || (forAdmin && !userInfo.isAdmin)) return null;
 
   return <>{children}</>;
 }

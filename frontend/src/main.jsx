@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <ToastContainer position="top-center" />
+    <ToastContainer position="top-center" autoClose={1000} />
     <App />
   </Provider>
 );

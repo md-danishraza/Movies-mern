@@ -36,7 +36,7 @@ function Navigations() {
   };
 
   return (
-    <div className="fixed bottom-10  right-[12rem] sm:right-[13rem] md:right-[15rem] transform translate-x-1/2 translate-y-1/2 z-50 text-white bg-[#0f0f0f] border w-[80%] sm:w-[50%]  lg:w-[30%] px-[4rem] mb-[2rem] rounded">
+    <div className="fixed bottom-10  right-[12rem] sm:right-[13rem] md:right-[15rem] transform translate-x-1/2 translate-y-1/2 z-50 text-white bg-[#0f0f0f] border w-[60%] sm:w-[50%]  lg:w-[30%] px-[4rem] mb-[2rem] rounded">
       <section className="flex justify-between items-center">
         {/* Section 1 */}
         <div className="flex justify-center items-center mb-[2rem]">
