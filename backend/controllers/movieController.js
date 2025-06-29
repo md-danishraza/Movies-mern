@@ -17,7 +17,34 @@ export const getAllMovies = wrapAsync(async (req, res) => {
     res.json(movies);
   } catch (error) {
     console.log(error);
-    throw new appError("failed to find movie", 500);
+    throw new appError("failed to find movies", 500);
+  }
+});
+export const getNewMovies = wrapAsync(async (req, res) => {
+  try {
+    const movies = await Movie.find().sort({ createdAt: -1 }).limit(10);
+    res.json(movies);
+  } catch (error) {
+    console.log(error);
+    throw new appError("failed to find movies", 500);
+  }
+});
+export const getTopMovies = wrapAsync(async (req, res) => {
+  try {
+    const movies = await Movie.find().sort({ numReviews: -1 }).limit(10);
+    res.json(movies);
+  } catch (error) {
+    console.log(error);
+    throw new appError("failed to find movies", 500);
+  }
+});
+export const getRandomMovies = wrapAsync(async (req, res) => {
+  try {
+    const movies = await Movie.aggregate([{ $sample: { size: 10 } }]);
+    res.json(movies);
+  } catch (error) {
+    console.log(error);
+    throw new appError("failed to find movies", 500);
   }
 });
 export const getSpecificMovie = wrapAsync(async (req, res) => {
@@ -48,6 +75,16 @@ export const updateMovie = wrapAsync(async (req, res) => {
   });
 
   res.json(updatedMovie);
+});
+export const deleteMovie = wrapAsync(async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Movie.findByIdAndDelete(id);
+    res.sendStatus(204);
+  } catch (error) {
+    throw new appError("failed to delete movie", 500);
+  }
 });
 export const createMovieReview = wrapAsync(async (req, res) => {
   //   console.log(req.user);
@@ -95,5 +132,45 @@ export const createMovieReview = wrapAsync(async (req, res) => {
   } catch (error) {
     console.log(error);
     throw new appError("failed to create review", 500);
+  }
+});
+
+export const deleteReview = wrapAsync(async (req, res) => {
+  const { movieId, reviewId } = req.body;
+
+  const movie = await Movie.findById(movieId);
+  if (!movie) throw new appError("Movie not found", 404);
+  // to remove and item from an array findIndex + splice
+  // array method to find index takes boolean
+  const reviewIndex = movie.reviews.findIndex(
+    (review) => review._id.toString() === reviewId
+  );
+
+  if (reviewIndex === -1) {
+    throw new appError("Review not found", 404);
+  }
+
+  // Remove the review
+  movie.reviews.splice(reviewIndex, 1);
+
+  // Update review count
+  movie.numReviews = movie.reviews.length;
+
+  // Update average rating
+  movie.overAllRating =
+    movie.numReviews > 0
+      ? movie.reviews.reduce((acc, r) => r.rating + acc, 0) / movie.numReviews
+      : 0;
+
+  try {
+    await movie.save();
+    res.status(200).json({
+      message: "Review deleted successfully",
+      numReviews: movie.numReviews,
+      overAllRating: movie.overAllRating,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new appError("Failed to delete review", 500);
   }
 });
