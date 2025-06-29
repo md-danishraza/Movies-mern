@@ -11,6 +11,7 @@ import connectDB from "./config/db.js";
 import appError from "./utils/appError.js";
 import userRouter from "./routes/userRoutes.js";
 import genreRouter from "./routes/genreRoutes.js";
+import moviesRouter from "./routes/moviesRoutes.js";
 
 // connect to db
 connectDB();
@@ -25,6 +26,7 @@ app.use(cookieParser());
 // routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/genre", genreRouter);
+app.use("/api/v1/movies", moviesRouter);
 
 // if no url is matched
 app.use((req, res, next) => {
