@@ -7,6 +7,7 @@ import Register from "./pages/auth/Register.jsx";
 import AuthLayout from "./pages/auth/AuthLayout.jsx";
 import Profile from "./pages/user/Profile.jsx";
 import GenreList from "./pages/admin/GenreList.jsx";
+import CreateMovie from "./pages/admin/CreateMovie.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout forAdmin={true}>
             <GenreList />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/admin/movies/create",
+        element: (
+          <AuthLayout forAdmin={true}>
+            <CreateMovie />
           </AuthLayout>
         ),
       },

@@ -12,6 +12,7 @@ import appError from "./utils/appError.js";
 import userRouter from "./routes/userRoutes.js";
 import genreRouter from "./routes/genreRoutes.js";
 import moviesRouter from "./routes/moviesRoutes.js";
+import uploadsRouter from "./routes/uploadRoutes.js";
 
 // connect to db
 connectDB();
@@ -23,10 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(express.static(path.join(path.resolve(), "uploads")));
+
 // routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/genre", genreRouter);
 app.use("/api/v1/movies", moviesRouter);
+app.use("/api/v1/uploads", uploadsRouter);
 
 // if no url is matched
 app.use((req, res, next) => {
