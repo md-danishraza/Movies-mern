@@ -1,56 +1,57 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  useCreateMovieMutation,
-  useUploadImageMutation,
-} from "../../redux/api/movie";
-import { useFetchGenresQuery } from "../../redux/api/genre";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-function CreateMovie() {
+// upload and delete image,movie
+// getspecific movie using id
+import {
+  useGetSpecificMovieQuery,
+  useUpdateMovieMutation,
+  useDeleteMovieMutation,
+  useUploadImageMutation,
+  useDeleteImageMutation,
+} from "../../redux/api/movie";
+// get genres
+import { useFetchGenresQuery } from "../../redux/api/genre";
+function UpdateMovie() {
+  const { id } = useParams();
   const navigate = useNavigate();
-  // image will be saved as URL
-  // genre will have just id from genre schema
-  // cast is array of String comma seperated
+
   const [movieData, setMovieData] = useState({
     name: "",
     year: 0,
     detail: "",
     cast: [],
-    overAllRating: 0,
+    ratings: 0,
     image: null,
     genre: "",
   });
-  //   current image
+
   const [selectedImage, setSelectedImage] = useState(null);
-  // create movie trigger
-  const [
-    createMovie,
-    { isLoading: isCreatingMovie, error: createMovieErrorDetail },
-  ] = useCreateMovieMutation();
-  // upload image trigger
+  const { data: initialMovieData } = useGetSpecificMovieQuery(id);
+  //   fetching the and setting the movie initial data
+  useEffect(() => {
+    if (initialMovieData) {
+      setMovieData(initialMovieData);
+    }
+    // console.log(initialMovieData);
+  }, [initialMovieData]);
+  // all genres for select and option
+  const { data: genres, isLoading: isLoadingGenres } = useFetchGenresQuery();
+  const [updateMovie, { isLoading: isUpdatingMovie, error: updateMovieError }] =
+    useUpdateMovieMutation();
+  const [deleteMovie, { isLoading: isDeletingMovie }] =
+    useDeleteMovieMutation();
   const [
     uploadImage,
     { isLoading: isUploadingImage, error: uploadImageErrorDetails },
   ] = useUploadImageMutation();
-
-  const { data: genres, isLoading: isLoadingGenres } = useFetchGenresQuery();
-  //   since genre cannot be empty. so taking 0th genre as default
-  useEffect(() => {
-    if (genres) {
-      setMovieData((prevData) => ({
-        ...prevData,
-        genre: genres[0]?._id || "",
-      }));
-      // console.log(genres[0]?._id);
-      // console.log(genres);
-    }
-  }, [genres]);
+  const [
+    deleteImage,
+    { isLoading: isDeletingImage, error: deleteImageErrorDetails },
+  ] = useDeleteImageMutation();
 
   const handleChange = (e) => {
-    // name is genre
-    // value is _id
     const { name, value } = e.target;
 
     // if genre input
@@ -75,66 +76,89 @@ function CreateMovie() {
     setSelectedImage(file);
     // console.log(file.size / (1024 * 1024));
   };
-  const handleCreateMovie = async () => {
-    // console.log("movie created");
-    try {
-      if (
-        !movieData.name ||
-        !movieData.year ||
-        !movieData.detail ||
-        !movieData.cast ||
-        !selectedImage
-      ) {
-        toast.error("Please fill all required fields");
+
+  const handleUpdateMovie = async () => {
+    // if not selectedImage than update only movie
+    // else delete current image and upload new image
+
+    if (
+      !movieData.name ||
+      !movieData.year ||
+      !movieData.detail ||
+      !movieData.cast ||
+      !movieData.genre
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (!selectedImage) {
+      // just update the movie
+      try {
+        await updateMovie({
+          id: id,
+          updatedMovie: {
+            ...movieData,
+          },
+        });
+
+        //   navigate("/movies");
+      } catch (error) {
+        console.error("Failed to update movie: ", updateMovieError);
+        toast.error(`Failed to update movie: ${updateMovieError?.message}`);
         return;
       }
+    } else {
+      // image handling
+      // first delete current image
+      try {
+        await deleteImage(movieData.image);
+      } catch (error) {
+        console.error("Failed to delete image: ", deleteImageErrorDetails);
+        toast.error(
+          `Failed to delete image: ${deleteImageErrorDetails?.message}`
+        );
+        return;
+      }
+      //   upload new image
+      const formData = new FormData();
+      formData.append("image", selectedImage);
 
-      let uploadedImageURL = null;
-      // creating new form-data for image upload
-      if (selectedImage) {
-        const formData = new FormData();
-        formData.append("image", selectedImage);
-        // uploading image
-        const uploadImageResponse = await uploadImage(formData);
-
-        if (uploadImageResponse.data) {
-          uploadedImageURL = uploadImageResponse.data.url;
-        } else {
-          console.error("Failed to upload image: ", uploadImageErrorDetails);
-          toast.error("Failed to upload image");
+      // uploading image
+      const uploadImageResponse = await uploadImage(formData);
+      if (uploadImageResponse.data) {
+        const uploadedImageURL = uploadImageResponse.data.url;
+        //   update movie
+        try {
+          await createMovie({
+            ...movieData,
+            image: uploadedImageURL,
+          });
+          //   navigate("/movies");
+        } catch (error) {
+          console.error("Failed to update movie: ", updateMovieError);
+          toast.error(`Failed to update movie: ${updateMovieError?.message}`);
           return;
         }
-        // adding image field as uploadedimageurl
-        // console.log(movieData);
-        await createMovie({
-          ...movieData,
-          image: uploadedImageURL,
-        });
-
-        navigate("/admin/movies/list");
-        // set inputs
-        setMovieData({
-          name: "",
-          year: 0,
-          detail: "",
-          cast: [],
-          ratings: 0,
-          image: null,
-          genre: "",
-        });
-        setSelectedImage(null);
-
-        toast.success("Movie Added To Database");
+      } else {
+        console.error("Failed to upload image: ", uploadImageErrorDetails);
+        toast.error("Failed to upload image");
+        return;
       }
-    } catch (error) {
-      console.error("Failed to create movie: ", createMovieErrorDetail);
-      toast.error(`Failed to create movie: ${createMovieErrorDetail?.message}`);
     }
+    // if success
+    toast.success("movie updated successfully!");
   };
+  const handleDeleteMovie = async () => {
+    // first delete image
+    // then delete movie
+    console.log("deleted");
+  };
+
   return (
     <div className="container flex justify-center items-center mt-4">
       <form className="w-[80%] max-w-[40rem]">
-        <p className="text-green-200  text-2xl mb-4">Create Movie</p>
+        <p className="text-green-200  text-2xl mb-4">Update Movie</p>
         <div className="mb-4">
           <label className="block">
             Name:
@@ -243,15 +267,24 @@ function CreateMovie() {
         {/* btn disabled if making request */}
         <button
           type="button"
-          onClick={handleCreateMovie}
+          onClick={handleUpdateMovie}
           className="bg-teal-500 text-white px-4 py-2 rounded"
-          disabled={isCreatingMovie || isUploadingImage}
+          disabled={isUpdatingMovie || isUploadingImage}
         >
-          {isCreatingMovie || isUploadingImage ? "Creating..." : "Create Movie"}
+          {isUpdatingMovie || isUploadingImage ? "Updating..." : "Update Movie"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleDeleteMovie}
+          className="bg-red-500 text-white px-4 py-2 rounded ml-2"
+          disabled={isUpdatingMovie || isUploadingImage}
+        >
+          {isUpdatingMovie || isUploadingImage ? "Deleting..." : "Delete Movie"}
         </button>
       </form>
     </div>
   );
 }
 
-export default CreateMovie;
+export default UpdateMovie;

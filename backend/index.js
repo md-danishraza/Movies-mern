@@ -6,6 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import path from "path";
 import connectDB from "./config/db.js";
 import appError from "./utils/appError.js";
@@ -23,6 +24,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use(express.static(path.join(path.resolve(), "uploads")));
 

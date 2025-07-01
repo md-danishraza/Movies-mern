@@ -57,6 +57,12 @@ const movieApiSlice = apiSlice.injectEndpoints({
         body: formData,
       }),
     }),
+    deleteImage: builder.mutation({
+      query: (imgUrl) => ({
+        url: `${uploads_URL}?imgUrl=${imgUrl}`,
+        method: "DELETE",
+      }),
+    }),
 
     getNewMovies: builder.query({
       query: () => `${movie_URL}/new-movies`,
@@ -84,4 +90,5 @@ export const {
   useGetTopMoviesQuery,
   useGetRandomMoviesQuery,
   useUploadImageMutation,
+  useDeleteImageMutation,
 } = movieApiSlice;

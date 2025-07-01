@@ -8,6 +8,8 @@ import AuthLayout from "./pages/auth/AuthLayout.jsx";
 import Profile from "./pages/user/Profile.jsx";
 import GenreList from "./pages/admin/GenreList.jsx";
 import CreateMovie from "./pages/admin/CreateMovie.jsx";
+import MovieList from "./pages/admin/MovieList.jsx";
+import UpdateMovie from "./pages/admin/UpdateMovie.jsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,22 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout forAdmin={true}>
             <CreateMovie />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/admin/movies/list",
+        element: (
+          <AuthLayout forAdmin={true}>
+            <MovieList />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/admin/movies/update/:id",
+        element: (
+          <AuthLayout forAdmin={true}>
+            <UpdateMovie />
           </AuthLayout>
         ),
       },
