@@ -58,13 +58,13 @@ Router.post(
 );
 Router.delete(
   "/",
-  upload.single("image"),
   wrapAsync(async (req, res) => {
     const { imgUrl } = req.query;
+    // console.log(imgUrl);
     const publicId = imgUrl.split("/").pop().split(".")[0];
-
+    // console.log(publicId);
     const result = await cloudinary.uploader.destroy(`Movies/${publicId}`);
-
+    // console.log(result);
     if (result.result === "not found") {
       throw new appError("Image not found or already deleted", 404);
     }

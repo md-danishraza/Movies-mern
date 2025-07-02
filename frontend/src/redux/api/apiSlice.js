@@ -1,14 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// using proxy
+// using proxy for CORS, vite will send request with  same origin as backend
 // /api/ = http://localhost:3000/api/.
 
-const Base_URL = import.meta.env.VITE_BASE_URL + "/api";
+// const Base_URL = import.meta.env.VITE_BASE_URL + "/api";
+const Base_URL = "/api";
 const Users_URL = "/v1/users";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: Base_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: Base_URL, credentials: "include" }),
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (data) => ({

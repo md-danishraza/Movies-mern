@@ -111,14 +111,17 @@ function UpdateMovie() {
     } else {
       // image handling
       // first delete current image
-      try {
-        await deleteImage(movieData.image);
-      } catch (error) {
-        console.error("Failed to delete image: ", deleteImageErrorDetails);
-        toast.error(
-          `Failed to delete image: ${deleteImageErrorDetails?.message}`
-        );
-        return;
+      // if image exist
+      if (movieData.image) {
+        try {
+          await deleteImage(movieData.image);
+        } catch (error) {
+          console.error("Failed to delete image: ", deleteImageErrorDetails);
+          toast.error(
+            `Failed to delete image: ${deleteImageErrorDetails?.message}`
+          );
+          return;
+        }
       }
       //   upload new image
       const formData = new FormData();
@@ -130,11 +133,16 @@ function UpdateMovie() {
         const uploadedImageURL = uploadImageResponse.data.url;
         //   update movie
         try {
-          await createMovie({
-            ...movieData,
-            image: uploadedImageURL,
+          await updateMovie({
+            id: id,
+            updatedMovie: {
+              ...movieData,
+              image: uploadedImageURL,
+            },
           });
-          //   navigate("/movies");
+          // if success
+          toast.success("movie updated successfully!");
+          navigate("/movies");
         } catch (error) {
           console.error("Failed to update movie: ", updateMovieError);
           toast.error(`Failed to update movie: ${updateMovieError?.message}`);
@@ -146,13 +154,32 @@ function UpdateMovie() {
         return;
       }
     }
-    // if success
-    toast.success("movie updated successfully!");
   };
   const handleDeleteMovie = async () => {
     // first delete image
     // then delete movie
-    console.log("deleted");
+    // console.log("deleted");
+    if (movieData.image) {
+      try {
+        await deleteImage(movieData.image);
+      } catch (error) {
+        console.error("Failed to delete image: ", deleteImageErrorDetails);
+        toast.error(
+          `Failed to delete image: ${deleteImageErrorDetails?.message}`
+        );
+        return;
+      }
+    }
+
+    // now delete the movie
+    try {
+      await deleteMovie(id);
+      toast.success("Movie deleted successfully");
+      navigate("/movies");
+    } catch (error) {
+      console.error("Failed to delete movie:", error);
+      toast.error(`Failed to delete movie: ${error?.message}`);
+    }
   };
 
   return (
@@ -268,8 +295,13 @@ function UpdateMovie() {
         <button
           type="button"
           onClick={handleUpdateMovie}
-          className="bg-teal-500 text-white px-4 py-2 rounded"
-          disabled={isUpdatingMovie || isUploadingImage}
+          className="bg-teal-500 hover:bg-teal-700 cursor-pointer text-white px-4 py-2 rounded"
+          disabled={
+            isUpdatingMovie ||
+            isUploadingImage ||
+            isDeletingImage ||
+            isDeletingMovie
+          }
         >
           {isUpdatingMovie || isUploadingImage ? "Updating..." : "Update Movie"}
         </button>
@@ -277,10 +309,15 @@ function UpdateMovie() {
         <button
           type="button"
           onClick={handleDeleteMovie}
-          className="bg-red-500 text-white px-4 py-2 rounded ml-2"
-          disabled={isUpdatingMovie || isUploadingImage}
+          className="bg-red-500 hover:bg-red-700 cursor-pointer  text-white px-4 py-2 rounded ml-2"
+          disabled={
+            isUpdatingMovie ||
+            isUploadingImage ||
+            isDeletingImage ||
+            isDeletingMovie
+          }
         >
-          {isUpdatingMovie || isUploadingImage ? "Deleting..." : "Delete Movie"}
+          {isDeletingMovie || isDeletingImage ? "Deleting..." : "Delete Movie"}
         </button>
       </form>
     </div>

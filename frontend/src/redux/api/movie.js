@@ -59,7 +59,7 @@ const movieApiSlice = apiSlice.injectEndpoints({
     }),
     deleteImage: builder.mutation({
       query: (imgUrl) => ({
-        url: `${uploads_URL}?imgUrl=${imgUrl}`,
+        url: `${uploads_URL}?imgUrl=${encodeURIComponent(imgUrl)}`,
         method: "DELETE",
       }),
     }),
