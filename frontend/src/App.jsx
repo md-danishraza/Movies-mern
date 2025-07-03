@@ -11,6 +11,7 @@ import CreateMovie from "./pages/admin/CreateMovie.jsx";
 import MovieList from "./pages/admin/MovieList.jsx";
 import UpdateMovie from "./pages/admin/UpdateMovie.jsx";
 import AllMovies from "./pages/movies/AllMovies.jsx";
+import MovieDetail from "./pages/movies/MovieDetail.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/movies",
         element: <AllMovies />,
+      },
+      {
+        path: "/movies/:id",
+        element: <MovieDetail />,
       },
       {
         path: "/login",
