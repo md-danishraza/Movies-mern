@@ -10,6 +10,7 @@ import GenreList from "./pages/admin/GenreList.jsx";
 import CreateMovie from "./pages/admin/CreateMovie.jsx";
 import MovieList from "./pages/admin/MovieList.jsx";
 import UpdateMovie from "./pages/admin/UpdateMovie.jsx";
+import AllMovies from "./pages/movies/AllMovies.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: "/movies",
+        element: <AllMovies />,
       },
       {
         path: "/login",
