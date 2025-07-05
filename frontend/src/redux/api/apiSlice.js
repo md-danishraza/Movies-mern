@@ -3,8 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // using proxy for CORS, vite will send request with  same origin as backend
 // /api/ = http://localhost:3000/api/.
 
-// const Base_URL = import.meta.env.VITE_BASE_URL + "/api";
-const Base_URL = "/api";
+// if in prod then use baseurl else viteproxy
+const Base_URL = import.meta.env.PROD
+  ? import.meta.env.VITE_BASE_URL + "/api"
+  : "/api";
 const Users_URL = "/v1/users";
 
 export const apiSlice = createApi({
@@ -43,6 +45,12 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    //
+    getAllUsers: builder.query({
+      query: () => ({
+        url: `${Users_URL}`,
+      }),
+    }),
   }),
 });
 
@@ -52,4 +60,5 @@ export const {
   useRegisterMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
+  useGetAllUsersQuery,
 } = apiSlice;

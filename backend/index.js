@@ -7,7 +7,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
+
 import path from "path";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 import connectDB from "./config/db.js";
 import appError from "./utils/appError.js";
 import userRouter from "./routes/userRoutes.js";
@@ -24,7 +27,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL, // must match Netlify domain
+    credentials: true,
+  })
+);
+
+app.use(helmet());
+app.use(ExpressMongoSanitize());
 
 app.use(express.static(path.join(path.resolve(), "uploads")));
 

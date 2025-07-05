@@ -7,27 +7,30 @@ import MovieCard from "./MovieCard";
 function Sliderutil({ data }) {
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: data?.length > 4, // disable infinite if not enough items
     speed: 500,
     slidesToScroll: 1,
-    slidesToShow: 4, // default for xl screens
+    slidesToShow: Math.min(data?.length, 4), // adapt to number of movies
     responsive: [
       {
-        breakpoint: 1280, // lg
+        breakpoint: 1280,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: Math.min(data?.length, 3),
+          infinite: data?.length > 3,
         },
       },
       {
-        breakpoint: 1024, // md
+        breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: Math.min(data?.length, 2),
+          infinite: data?.length > 2,
         },
       },
       {
-        breakpoint: 640, // sm
+        breakpoint: 640,
         settings: {
           slidesToShow: 1,
+          infinite: data?.length > 1,
         },
       },
     ],

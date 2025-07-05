@@ -17,3 +17,12 @@ body {
   select option {
     color: black;
   }
+
+
+.slick-dots li button:before {
+  color: white !important;
+  opacity: 0.75;
+}
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+}

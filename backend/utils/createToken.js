@@ -8,7 +8,7 @@ export const createToken = (res, userId) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // ensures HTTPS in production
     sameSite: "Strict", // for production
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   });
 
   return token;

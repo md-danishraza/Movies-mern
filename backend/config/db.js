@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
 configDotenv();
 const dbUrl = process.env.MONGO_URL;
-console.log(dbUrl);
+// console.log(dbUrl);
 const connectDB = () => {
   mongoose
     .connect(dbUrl)

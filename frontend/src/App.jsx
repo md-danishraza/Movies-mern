@@ -13,6 +13,7 @@ import UpdateMovie from "./pages/admin/UpdateMovie.jsx";
 import AllMovies from "./pages/movies/AllMovies.jsx";
 import MovieDetail from "./pages/movies/MovieDetail.jsx";
 import AllComments from "./pages/admin/AllComments.jsx";
+import DashBoard from "./pages/admin/DashBoard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout>
             <Profile />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/admin/movies/dashboard",
+        element: (
+          <AuthLayout forAdmin={true}>
+            <DashBoard />
           </AuthLayout>
         ),
       },
