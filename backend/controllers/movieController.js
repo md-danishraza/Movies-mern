@@ -14,6 +14,7 @@ export const createMovie = wrapAsync(async (req, res) => {
 export const getAllMovies = wrapAsync(async (req, res) => {
   try {
     const movies = await Movie.find();
+    console.log(movies);
     res.json(movies);
   } catch (error) {
     console.log(error);

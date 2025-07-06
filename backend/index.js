@@ -38,15 +38,6 @@ app.use(ExpressMongoSanitize());
 
 app.use(express.static(path.join(path.resolve(), "uploads")));
 
-app.use((req, res, next) => {
-  Object.defineProperty(req, "query", {
-    set: () => {
-      throw new Error("[Debug] Attempted to overwrite req.query");
-    },
-  });
-  next();
-});
-
 // routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/genre", genreRouter);
