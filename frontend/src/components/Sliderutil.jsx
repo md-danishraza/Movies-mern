@@ -37,7 +37,7 @@ function Sliderutil({ data }) {
   };
   if (!data?.length) {
     return (
-      <h1 className="text-center text-2xl text-red-500">
+      <h1 className="text-center text-sm text-red-500">
         No Movies with this Gerne
       </h1>
     );

@@ -6,8 +6,8 @@ export const createToken = (res, userId) => {
 
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // ensures HTTPS in production
-    sameSite: "Strict", // for production
+    secure: process.env.NODE_ENV === "production", // HTTPS (works on Netlify + Render)
+    sameSite: "None", // equired for cross-origin cookies
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   });
 
