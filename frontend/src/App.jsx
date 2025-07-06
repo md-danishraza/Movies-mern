@@ -14,11 +14,13 @@ import AllMovies from "./pages/movies/AllMovies.jsx";
 import MovieDetail from "./pages/movies/MovieDetail.jsx";
 import AllComments from "./pages/admin/AllComments.jsx";
 import DashBoard from "./pages/admin/DashBoard.jsx";
+import Error from "./pages/Error.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout />,
+    errorElement: <Error />,
     children: [
       {
         index: true,

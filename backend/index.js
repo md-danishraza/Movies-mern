@@ -4,7 +4,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 import express from "express";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
@@ -38,6 +37,15 @@ app.use(helmet());
 app.use(ExpressMongoSanitize());
 
 app.use(express.static(path.join(path.resolve(), "uploads")));
+
+app.use((req, res, next) => {
+  Object.defineProperty(req, "query", {
+    set: () => {
+      throw new Error("[Debug] Attempted to overwrite req.query");
+    },
+  });
+  next();
+});
 
 // routes
 app.use("/api/v1/users", userRouter);
