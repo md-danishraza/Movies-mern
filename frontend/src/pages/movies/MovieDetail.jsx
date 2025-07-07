@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 import {
   useGetSpecificMovieQuery,
   useAddMovieReviewMutation,
@@ -41,7 +42,7 @@ function MovieDetail() {
       toast.error(error.data.message || error.message);
     }
   };
-  if (isLoading) return <div className="spinner"></div>;
+  if (isLoading) return <Loader />;
   return (
     <section className="flex flex-col w-full md:w-[80%] mx-auto px-4 ">
       <div>

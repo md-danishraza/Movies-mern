@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Sliderutil from "../../components/Sliderutil";
+import Loader from "../../components/Loader";
 import {
   useGetTopMoviesQuery,
   useGetRandomMoviesQuery,
@@ -10,7 +11,7 @@ import {
 import { useFetchGenresQuery } from "../../redux/api/genre";
 
 function MoviesContainer() {
-  const { data } = useGetNewMoviesQuery();
+  const { data, isLoading } = useGetNewMoviesQuery();
   const { data: topMovies } = useGetTopMoviesQuery();
   const { data: randomMovies } = useGetRandomMoviesQuery();
   const { data: genres } = useFetchGenresQuery();
@@ -23,7 +24,9 @@ function MoviesContainer() {
       return data?.filter((movie) => movie.genre === selectedGenre);
     });
   }, [selectedGenre]);
-
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className="flex flex-col mx-4 mt-8 md:flex-row justify-between items-center md:items-start">
       <nav className="flex flex-wrap flex-row md:flex-col md:mr-4">

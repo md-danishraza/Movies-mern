@@ -10,6 +10,7 @@ import MovieCard from "../../components/MovieCard";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import banner from "../../assets/banner.jpg";
+import Loader from "../../components/Loader";
 
 import {
   setMovieFilter,
@@ -21,7 +22,7 @@ import {
 function AllMovies() {
   const dispatch = useDispatch();
 
-  const { data } = useGetAllMoviesQuery();
+  const { data, isLoading } = useGetAllMoviesQuery();
   const { data: genres } = useFetchGenresQuery();
   const { data: newMovies } = useGetNewMoviesQuery();
   const { data: randomMovies } = useGetRandomMoviesQuery();
@@ -173,9 +174,13 @@ function AllMovies() {
       </div>
 
       <section className="mt-[1rem] w-screen px-4 grid gap-4 md:grid-cols-2 items-center">
-        {filteredMovies?.map((movie) => (
-          <MovieCard key={movie._id} movie={movie} />
-        ))}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          filteredMovies?.map((movie) => (
+            <MovieCard key={movie._id} movie={movie} />
+          ))
+        )}
       </section>
     </div>
   );

@@ -36,17 +36,17 @@ function Navigations() {
   };
 
   return (
-    <div className="fixed bottom-10  right-[12rem] sm:right-[13rem] md:right-[15rem] transform translate-x-1/2 translate-y-1/2 z-50 text-white bg-[#0f0f0f] border w-[60%] sm:w-[50%]  lg:w-[30%] px-[4rem] mb-[2rem] rounded">
+    <div className="fixed bottom-10  right-[12rem] sm:right-[13rem] md:right-[15rem] transform translate-x-1/2 translate-y-1/2 z-50 text-white bg-[#0f0f0f] border w-[60%] sm:w-[50%]  lg:w-[30%] px-[2rem] py-[1rem] mb-[2rem] rounded">
       <section className="flex justify-between items-center">
         {/* Section 1 */}
-        <div className="flex justify-center items-center mb-[2rem]">
+        <div className="flex justify-center items-center ">
           <Link
             to="/"
             className="flex items-center transition-transform transform hover:translate-x-2"
             title="home"
           >
-            <AiOutlineHome className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Home</span>
+            <AiOutlineHome className="mr-2 " size={26} />
+            <span className="hidden nav-item-name ">Home</span>
           </Link>
 
           <Link
@@ -54,12 +54,12 @@ function Navigations() {
             className="flex items-center transition-transform transform hover:translate-x-2 ml-[1rem]"
             title="movies"
           >
-            <MdOutlineLocalMovies className="mr-2 mt-[3rem]" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">SHOP</span>
+            <MdOutlineLocalMovies className="mr-2 " size={26} />
+            <span className="hidden nav-item-name ">SHOP</span>
           </Link>
         </div>
         {/* SECTION 2 */}
-        <div className="relative">
+        <div className="relative flex items-center">
           {/* toggle btn if user then show with username */}
           <button
             onClick={toggleDropDown}
@@ -93,7 +93,7 @@ function Navigations() {
           {/* DROPDOWN - if user is admin then show dashboard , absolute article on left */}
           {dropDownOpen && userInfo && (
             <ul
-              className={`absolute right-0 mt-2 mr-14 w-[10rem] space-y-2 bg-white text-gray-600 ${
+              className={`absolute right-0  mr-14 w-[10rem] space-y-2 bg-white text-gray-600 ${
                 !userInfo.isAdmin ? "-top-20" : "-top-24"
               }`}
             >
@@ -136,10 +136,10 @@ function Navigations() {
               <li>
                 <Link
                   to="/login"
-                  className="flex items-center mt-5 transition-transform transform hover:translate-x-2 mb-[2rem]"
+                  className="flex items-center  transition-transform transform hover:translate-x-2 "
                   title="login"
                 >
-                  <AiOutlineLogin className="mr-2 mt-[4px]" size={26} />
+                  <AiOutlineLogin className="mr-2 " size={26} />
                   <span className="hidden nav-item-name">LOGIN</span>
                 </Link>
               </li>
@@ -147,7 +147,7 @@ function Navigations() {
               <li>
                 <Link
                   to="/register"
-                  className="flex items-center mt-5 transition-transform transform hover:translate-x-2 ml-[1rem]"
+                  className="flex items-center ransition-transform transform hover:translate-x-2 ml-[1rem]"
                   title="register"
                 >
                   <AiOutlineUserAdd size={26} />
