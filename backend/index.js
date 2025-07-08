@@ -37,6 +37,10 @@ app.use(helmet());
 app.use(ExpressMongoSanitize());
 
 app.use(express.static(path.join(path.resolve(), "uploads")));
+// health
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
 
 // routes
 app.use("/api/v1/users", userRouter);
@@ -58,6 +62,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("Server is running on port " + PORT);
 });
